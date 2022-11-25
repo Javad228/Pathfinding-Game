@@ -28,10 +28,7 @@ public class KeyHandler implements KeyListener {
 
         // walking audio should be started if one of the wasd keys has been pressed AND it wasn't being pressed before
         // or it has stopped playing
-        if ((eventW || eventS || eventA || eventD) &&
-                ((!wPressed && !sPressed && !aPressed && !dPressed) || !Audio.walkingClip.isRunning())) {
-            Audio.walking();
-        }
+
 
         /*
          * problem: this system is good for walking because it keeps updating while they're holding
@@ -65,76 +62,24 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_RIGHT) {
             rightPressed = true;
         }
-        if (gp.gameState == 4) {
-            if (code == KeyEvent.VK_C){gp.gameState = 1;}
-            if(code == KeyEvent.VK_W) {if (gp.inventory.slotRow != 0) {gp.inventory.slotRow--;}}
-            if(code == KeyEvent.VK_A) {if (gp.inventory.slotCol != 0) {gp.inventory.slotCol--;}}
-            if(code == KeyEvent.VK_S){if (gp.inventory.slotRow != 3) {gp.inventory.slotRow++;}}
-            if(code == KeyEvent.VK_D){if (gp.inventory.slotCol != 4) {gp.inventory.slotCol++;}}
-//            if(code == KeyEvent.VK_ENTER){gp.player.selectItem();}
-        }else{
-            if (code == KeyEvent.VK_C){gp.gameState = 4;}
-        }
+
+        if (code == KeyEvent.VK_C){gp.gameState = 4;}
+
 
 
         //can't make the settings page go away
         if (code == KeyEvent.VK_ESCAPE) {
-            if (!Main.view.getSettingsPage().isVisible()) {
-                //Main.view.getSettingsPage().setVisible(true);
-                //Main.view.getGamePanel().setVisible(false);
 
-                //Main.view.getGamePanel().pauseThread();
+            Main.view.getGamePanel().pauseThread();
 
-                Audio.stopMusic();
-                Audio.settingsMusic();
+        } else {
 
-                Main.view.getGamePanel().pauseThread();
+            Main.view.getGamePanel().resumeThread();
 
-                Main.view.getSettingsPage().showSettingsPanel();
-
-            } else {
-                //Main.view.getGamePanel().setVisible(true);
-                //Main.view.getSettingsPage().setVisible(false);
-                Main.view.getSettingsPage().hideSettingsPanel();
-
-                Main.view.getGamePanel().resumeThread();
-
-                Audio.stopMusic();
-                Audio.openingMusic();
-            }
         }
 
-        //display sounds for now
 
-        //pick up weapon or boone
-        if (code == KeyEvent.VK_1) {
-            Audio.itemPickUpAudio();
-        }
 
-        //player takes damage
-        if (code == KeyEvent.VK_2) {
-            Audio.playerDamagedAudio();
-        }
-
-        //enemy is damaged
-        if (code == KeyEvent.VK_SPACE) {
-            Audio.enemyDamagedAudio();
-        }
-
-        //object is destroyed
-        if (code == KeyEvent.VK_3) {
-            Audio.destroyObjectAudio();
-        }
-
-        //button is pressed
-        if (code == KeyEvent.VK_4) {
-            Audio.pressButtonAudio();
-        }
-
-        //door is opened
-        if (code == KeyEvent.VK_5) {
-            Audio.doorOpenAudio();
-        }
     }
 
     @Override
@@ -170,10 +115,6 @@ public class KeyHandler implements KeyListener {
             rightPressed = false;
         }
 
-        if (Audio.walkingClip != null) {
-            Audio.stopWalking();
-        }
-
     }
 
     public void reset() {
@@ -188,19 +129,4 @@ public class KeyHandler implements KeyListener {
         rightPressed = false;
     }
 
-    public String toBitString() {
-        StringBuilder s = new StringBuilder();
-
-        if (kPressed) s.append(1); else s.append(0);
-        if (wPressed) s.append(1); else s.append(0);
-        if (aPressed) s.append(1); else s.append(0);
-        if (sPressed) s.append(1); else s.append(0);
-        if (dPressed) s.append(1); else s.append(0);
-        if (upPressed) s.append(1); else s.append(0);
-        if (downPressed) s.append(1); else s.append(0);
-        if (leftPressed) s.append(1); else s.append(0);
-        if (rightPressed) s.append(1); else s.append(0);
-
-        return s.toString();
-    }
 }

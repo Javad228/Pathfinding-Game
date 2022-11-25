@@ -6,29 +6,8 @@ public class CollisionChecker {
         this.gp = gamePanel;
     }
 
-    public boolean checkLootCollision(Character entity, Loot target) {
-        if (target == null) return false;
 
-        entity.collisionOn = false;
-        entity.solidArea.x = entity.xCoord + entity.solidArea.x;
-        entity.solidArea.y = entity.yCoord + entity.solidArea.y;
-
-        target.solidArea.x = target.getxCoord() + target.solidArea.x;
-        target.solidArea.y = target.getyCoord() + target.solidArea.y;
-
-        if (entity.solidArea.intersects(target.solidArea)) {
-            entity.collisionOn = true;
-        }
-
-        entity.solidArea.y = entity.collisionAreaDefaultY;
-        entity.solidArea.x = entity.collisionAreaDefaultX;
-        target.solidArea.x = target.collisionAreaDefaultX;
-        target.solidArea.y = target.collisionAreaDefaultY;
-
-        return entity.collisionOn;
-    }
-
-    public boolean checkEntityCollision(java.lang.Character entity, java.lang.Character target) {
+    public boolean checkEntityCollision(Character entity, Character target) {
         if (target == null) return false;
 
         entity.collisionOn = false;
@@ -52,7 +31,7 @@ public class CollisionChecker {
         return entity.collisionOn;
     }
 
-    public boolean checkEntityAttack(java.lang.Character entity, java.lang.Character target){
+    public boolean checkEntityAttack(Character entity, Character target){
         if(target != null){
 
             entity.collisionOn = false;
@@ -79,7 +58,7 @@ public class CollisionChecker {
         return false;
     }
 
-    private void entityCollisionDirection(java.lang.Character entity) {
+    private void entityCollisionDirection(Character entity) {
         switch (entity.direction) {
             case "up" -> entity.solidArea.y -= entity.movementSpeed;
             case "down" -> entity.solidArea.y += entity.movementSpeed;
@@ -88,7 +67,7 @@ public class CollisionChecker {
         }
     }
 
-    public void checkTile (java.lang.Character character) {
+    public void checkTile (Character character) {
         int characterLeft = character.getxCoord() + character.solidArea.x;
         int characterRight = character.getxCoord() + character.solidArea.x + character.solidArea.width;
         int characterTop = character.getyCoord() + character.solidArea.y;
@@ -137,7 +116,7 @@ public class CollisionChecker {
 //        System.out.println(character.collisionOn);
     }
 
-    public void checkPath (java.lang.Character character, int[][] maze) {
+    public void checkPath (Character character, int[][] maze) {
         int characterLeft = character.getxCoord() + character.solidArea.x;
         int characterRight = character.getxCoord() + character.solidArea.x + character.solidArea.width;
         int characterTop = character.getyCoord() + character.solidArea.y;

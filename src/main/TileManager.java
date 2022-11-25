@@ -5,55 +5,50 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Objects;
+import java.util.Random;
 
 public class TileManager {
-
     GamePanel gp;
     public Tile[] tile;
     public int[][] mapTileNum;
-    //private int roomNum;
     private Object[] loot;
 
     public TileManager(GamePanel gp) {
         this.gp = gp;
         tile = new Tile[10];
         mapTileNum = new int[gp.maxScreenCol+1][gp.maxScreenRow+1];
-        //this.roomNum = 0;   // might need to change based on saved progress
         getTileImage();
         update();
     }
 
     public void update() {
-        int roomNum = gp.getCurrentRoomNum();
-//        System.out.println(roomNum);
-        if (roomNum == 1) {
-            System.out.println("loaded");
-            loadMap("/maps/map2.txt");
-            System.out.println("loaded success");
-        }
-        if (roomNum == 0) {
-            loadMap("/maps/map2.txt");
-        }
-
-        /*
-        if (gp.tileM != null){
-            gp.updateLootInRoom();
-        }
-         */
+        loadMap("/maps/asdc.txt");
     }
 
     public void getTileImage() {
         try {
+            String[] arr = new String[10];
+            arr[0] = "/tiles/grass.png";
+            arr[1] = "/tiles/grass.png";
+            arr[2] = "/tiles/grass.png";
+            arr[3] = "/tiles/grass.png";
+            arr[4] = "/tiles/tile000.png";
+            arr[5] = "/tiles/tile001.png";
+            arr[6] = "/tiles/tile002.png";
+            arr[7] = "/tiles/tile003.png";
+            arr[8] = "/tiles/grass.png";
+            arr[9] = "/tiles/grass.png";
+            Random rand = new Random();
+
             tile[0] = new Tile();
-            tile[0].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/grass.png")));
+            tile[0].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(arr[rand.nextInt(10)])));
 
             tile[1] = new Tile();
-            tile[1].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/door.png")));
+            tile[1].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/tree.png")));
             tile[1].collision = true;
 
             tile[2] = new Tile();
-            tile[2].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/door.png")));
-            //tile[2].collision = true;
+            tile[2].image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/tiles/tree.png")));
         }catch (IOException e) {
             e.printStackTrace();
         }
@@ -71,13 +66,9 @@ public class TileManager {
                 String line = br.readLine();
 
                 while (col < gp.maxScreenCol) {
-
                     String numbers[] = line.split(" ");
-
                     int num = Integer.parseInt(numbers[col]);
-
                     mapTileNum[col][row] = num;
-
                     col++;
                 }
 
@@ -116,11 +107,4 @@ public class TileManager {
         }
     }
 
-    public Object[] getLoot() {
-        return loot;
-    }
-
-    public void setLoot(Object[] loot) {
-        this.loot = loot;
-    }
 }

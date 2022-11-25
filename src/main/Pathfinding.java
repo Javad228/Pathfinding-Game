@@ -1,6 +1,3 @@
-import character.NonPlayableCharacter;
-import main.GamePanel;
-
 import java.util.ArrayList;
 
 public class Pathfinding {

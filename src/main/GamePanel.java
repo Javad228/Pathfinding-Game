@@ -1,13 +1,3 @@
-import character.Enemy;
-import character.Inventory;
-import character.NonPlayableCharacter;
-import character.PlayerCharacter;
-import loot.*;
-import save.SaveData;
-import save.SimpleCharacter;
-import save.SimpleWeapon;
-import tile.TileManager;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -30,6 +20,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public CollisionChecker checker = new CollisionChecker(this);
 	public TileManager tileM = new TileManager(this);
 	public KeyHandler keyH = new KeyHandler(this);
+	public NonPlayableCharacter[] enemies = new NonPlayableCharacter[2];
 	Thread gameThread;
 	public PlayerCharacter player = new PlayerCharacter(this, keyH);
 	private int currentRoomNum = 0;
@@ -55,11 +46,11 @@ public class GamePanel extends JPanel implements Runnable{
 		}
 
 			// assuming this is to set the position of enemies after starting a new game. probably needs to change
-			for (int i = 0; i < rooms.get(currentRoomNum).getEnemies().size(); i++) {
-				Enemy enemy = rooms.get(currentRoomNum).getEnemies().get(i);
-				enemy.setxCoord(100);
-				enemy.setyCoord(100);
-			}
+//			for (int i = 0; i < getEnemies().size(); i++) {
+//				Enemy enemy = rooms.get(currentRoomNum).getEnemies().get(i);
+//				enemy.setxCoord(100);
+//				enemy.setyCoord(100);
+//			}
 
 
 		this.resumeThread();
@@ -85,14 +76,8 @@ public class GamePanel extends JPanel implements Runnable{
 
 	@Override
 	public void run() {
-		/*
-		Slime enemy = new Slime();
-		Skeleton enemy1 = new Skeleton();
-		Wizard enemy2 = new Wizard(this);
-		enemies[0] = enemy;
-		enemies[1] = enemy1;
-		enemies[2] = enemy2;
-		*/
+		enemies[0] = new Skeleton(100,100);
+		enemies[1] = new Skeleton(500,500);
 
 		double drawInterval;					//converts from nanoseconds to seconds
 		double delta = 0;
@@ -132,13 +117,10 @@ public class GamePanel extends JPanel implements Runnable{
 				}
 
 				if (player.getHealth() <= 0) {
-					Audio.stopWalking();
-					Audio.stopMusic();
 					player.kill();
 					player.setDefaultValues();
 					keyH.reset();
 					player.setKeyHandler(null);
-					deathPanel.showDeathPanel();
 					//Main.view.getWindow().set
 					this.pauseThread();
 				}
@@ -148,26 +130,13 @@ public class GamePanel extends JPanel implements Runnable{
 
 	public void update(){
 		player.update();
-		if (rooms.get(currentRoomNum).getEnemies() != null){
-			for (int i = 0; i < rooms.get(currentRoomNum).getEnemies().size(); i++) {
-				Enemy enemy = rooms.get(currentRoomNum).getEnemies().get(i);
-				enemy.update(this);
+
+		for (int i = 0; i < enemies.length; i++) {
+			if(enemies[i]!=null) {
+				enemies[i].update(this);
 			}
 		}
 
-		if (rooms.get(currentRoomNum).getItems() != null) {
-			for (int i = 0; i < rooms.get(currentRoomNum).getItems().size(); i++) {
-				Item item = rooms.get(currentRoomNum).getItems().get(i);
-				item.update();
-			}
-		}
-
-		if (rooms.get(currentRoomNum).getNPCs() != null) {
-			for (int i = 0; i < rooms.get(currentRoomNum).getNPCs().size(); i++) {
-				NonPlayableCharacter npc = rooms.get(currentRoomNum).getNPCs().get(i);
-				npc.update(this);
-			}
-		}
 	}
 
 	public void paintComponent(Graphics g){
@@ -177,32 +146,11 @@ public class GamePanel extends JPanel implements Runnable{
 
 		tileM.draw(g2);
 		player.draw(g2);
-
-		if (rooms.get(currentRoomNum).getEnemies() != null) {
-			for (int i = 0; i < rooms.get(currentRoomNum).getEnemies().size(); i++) {
-				Enemy enemy = rooms.get(currentRoomNum).getEnemies().get(i);
-
-				if (enemy != null) {
-					enemy.draw(g2, this);
-				}
+		for (int i = 0; i < enemies.length; i++) {
+			if(enemies[i]!=null){
+				enemies[i].draw(g2,this);
 			}
 		}
-
-		if (rooms.get(currentRoomNum).getItems() != null) {
-			for (int i = 0; i < rooms.get(currentRoomNum).getItems().size(); i++) {
-				Item item = rooms.get(currentRoomNum).getItems().get(i);
-				item.draw(g2, this);
-			}
-		}
-
-		if (rooms.get(currentRoomNum).getNPCs() != null) {
-			for (int i = 0; i < rooms.get(currentRoomNum).getNPCs().size(); i++) {
-				NonPlayableCharacter npc = rooms.get(currentRoomNum).getNPCs().get(i);
-				npc.draw(g2, this);
-			}
-		}
-
-		inventory.draw(g2);
 
 		g2.dispose();
 	}
@@ -231,11 +179,4 @@ public class GamePanel extends JPanel implements Runnable{
 		this.currentRoomNum = currentRoomNum;
 	}
 
-	public ArrayList<Room> getRooms() {
-		return rooms;
-	}
-
-	public void setRooms(ArrayList<Room> rooms) {
-		this.rooms = rooms;
-	}
 }

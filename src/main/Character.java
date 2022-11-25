@@ -6,9 +6,6 @@
  */
 
 
-import combat.CombatType;
-import main.Audio;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -28,9 +25,7 @@ public abstract class Character {
     public int height;                         // Character height in pixels
     public int width;                          // Character width in pixels
     public ArrayList<String> activeEffects;    // Character active effects in game
-    public CombatType type;                    // Character combat type
     public double timeForInvincibility;        // Character time for invincibility after combat hit
-    public Projectile projectile;
     private boolean hasThrownProjectile;
 
     public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
@@ -66,7 +61,6 @@ public abstract class Character {
         this.height = 50;
         this.width = 50;
         this.activeEffects = new ArrayList<>();
-        this.type = CombatType.DEFAULT;
         this.timeForInvincibility = 1;
     }
 
@@ -74,12 +68,10 @@ public abstract class Character {
      * Constructor to create Character Object from the user
      *
      * @param name User-inputted name to name this Character
-     * @param type User-inputted combat type for this Character
      */
-    public Character(String name, CombatType type) {
+    public Character(String name) {
         this();
         this.name = name;
-        this.type = type;
     }
 
     /**
@@ -92,12 +84,10 @@ public abstract class Character {
      * @param yCoord y-Coordinate of this Character
      * @param height Height of the character
      * @param width Width of the character
-     * @param activeEffects Display and apply any affects that this Character possesses
-     * @param type Character Combat type
      * @param timeForInvincibility Time for invincibility given a hit occurs against this Character
      */
     public Character(String name, int health, int movementSpeed, int xCoord, int yCoord, int height, int width,
-                     ArrayList<String> activeEffects, CombatType type, double timeForInvincibility) {
+                     double timeForInvincibility) {
         this.name = name;
         this.health = health;
         this.movementSpeed = movementSpeed;
@@ -105,8 +95,6 @@ public abstract class Character {
         this.yCoord = yCoord;
         this.height = height;
         this.width = width;
-        this.activeEffects = activeEffects;
-        this.type = type;
         this.timeForInvincibility = timeForInvincibility;
     }
 
@@ -124,9 +112,6 @@ public abstract class Character {
     }
 
     public void setHealth(int health) {
-        if (this instanceof PlayerCharacter) {
-            Audio.playerDamagedAudio();
-        }
         this.health = health;
     }
 
@@ -193,13 +178,6 @@ public abstract class Character {
         this.activeEffects = activeEffects;
     }
 
-    public CombatType getType() {
-        return type;
-    }
-
-    public void setType(CombatType type) {
-        this.type = type;
-    }
 
     public double getTimeForInvincibility() {
         return timeForInvincibility;
@@ -207,14 +185,6 @@ public abstract class Character {
 
     public void setTimeForInvincibility(double timeForInvincibility) {
         this.timeForInvincibility = timeForInvincibility;
-    }
-
-    public Projectile getProjectile() {
-        return projectile;
-    }
-
-    public void setProjectile(Projectile projectile) {
-        this.projectile = projectile;
     }
 
     public boolean getIsAlive() {
@@ -321,7 +291,6 @@ public abstract class Character {
         if (this.xCoord != ((Character) o).getxCoord()) return false;
         if (this.yCoord != ((Character) o).getyCoord()) return false;
         if (!this.activeEffects.equals(((Character) o).getActiveEffects())) return false;
-        if (this.type != ((Character) o).getType()) return false;
 
         return this.timeForInvincibility == ((Character) o).getTimeForInvincibility();
     }

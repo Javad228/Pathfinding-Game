@@ -1,5 +1,3 @@
-import combat.DamageType;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
@@ -11,11 +9,10 @@ import java.util.Objects;
  * @version September 28, 2022
  */
 
-public abstract class NonPlayableCharacter extends java.lang.Character {
+public class NonPlayableCharacter extends Character {
 
     //public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
     private int damagePerHit;               // Amount of damage a NonPlayableCharacter can inflict on other Characters
-    private DamageType damageType;          // Type of damage a NonPlayableCharacter can inflict
     //private script pathfindingScript      // Pathfinding Script
                                             // TODO: Update pathfindingScript when fully implemented
     //private pattern projectilePattern     // Projectile Pattern
@@ -29,7 +26,6 @@ public abstract class NonPlayableCharacter extends java.lang.Character {
     public NonPlayableCharacter() {
         super();
         this.damagePerHit = 0;
-        this.damageType = DamageType.DEFAULT;
         this.attackCooldown = 1;
     }
 
@@ -197,65 +193,8 @@ public abstract class NonPlayableCharacter extends java.lang.Character {
         this.damagePerHit = damagePerHit;
     }
 
-    public double getAttackCooldown() {
-        return attackCooldown;
-    }
-
-    public void setAttackCooldown(double attackCooldown) {
-        this.attackCooldown = attackCooldown;
-    }
-
-
-
-    public void drawHP(Graphics2D g2, GamePanel gamePanel){
-        double oneScale = (double)gamePanel.tileSize/maxHealth;
-        double hpBarValue = oneScale*health;
-
-        g2.setColor(new Color(35, 35, 35));
-        g2.fillRect(xCoord-1, yCoord-4, gamePanel.tileSize+2, 12);
-        g2.setColor(new Color(255, 0, 30));
-        g2.fillRect(xCoord, yCoord - 3 , (int) hpBarValue, 10);
-
-        if(isInvincible){
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-        }else{
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        }
-    }
     public void draw(Graphics2D g2, GamePanel gamePanel){
-        if (this.isHasThrownProjectile()) {
-            this.getProjectile().draw(g2);
-        }
-        drawHP(g2, gamePanel);
         BufferedImage image = null;
-
-        if (!getIsAlive()) {
-            // configure animations
-            // after animations are done remove from room
-            switch(this.getSpriteNum()) {
-                case 1:
-                    image = this.getDeath1();
-                    break;
-                case 2:
-                    image = this.getDeath2();
-                    break;
-                case 3:
-                    image = this.getDeath3();
-                    break;
-                case 4:
-                    image = this.getDeath4();
-                    break;
-                case 5:
-                    image = this.getDeath5();
-                    break;
-                case 6: // out of sprites, remove enemy from room and exit method
-                    gamePanel.getRooms().get(gamePanel.getCurrentRoomNum()).getEnemies().remove(this);
-                    return;
-            }
-            g2.drawImage(image, this.getxCoord(), this.getyCoord(), this.getWidth(), this.getHeight(), null);
-
-            return;
-        }
 
         switch(this.getDirection()) {
             case "up":
